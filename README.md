@@ -42,3 +42,7 @@ PIL.Image.open(BytesIO(img_response.content))   --> doesn t work for svg
 ```text
 2631/4384
 ```
+
+```text
+adaptive background in feature extractor
+```
