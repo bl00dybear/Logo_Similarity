@@ -1,7 +1,7 @@
 import torch
 
 from torchvision import models, transforms
-from PIL import Image
+from PIL import Image,ImageStat
 
 
 
@@ -22,6 +22,12 @@ class FeatureExtractor:
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])    # normalize by mean and standard deviation
         ])
 
+    def get_adaptive_background(self, image):
+        stat = ImageStat.Stat(image)
+        brightness = sum(stat.mean[:3]) / 3
+
+        return (50, 50, 50) if brightness > 128 else (220, 220, 220)
+
     def preprocess_image(self, image_path):
         try:
             img = Image.open(image_path)
@@ -30,7 +36,8 @@ class FeatureExtractor:
                 img = img.convert("RGBA")
 
             if img.mode == "RGBA":
-                background = Image.new("RGB", img.size, (255, 255, 255))
+                adaptive_bg = self.get_adaptive_background(img.convert("RGB"))
+                background = Image.new("RGB", img.size, adaptive_bg)
                 background.paste(img, mask=img.split()[3])
                 img = background
 
