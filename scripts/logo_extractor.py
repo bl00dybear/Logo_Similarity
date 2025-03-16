@@ -17,7 +17,12 @@ class LogoExtractor:
     def __init__(self, output_dir = "..logos"):
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
-        self.headers = {'User-Agent': 'Mozilla/5.0'}
+        # self.headers = {'User-Agent': 'Mozilla/5.0'}
+        self.headers = {
+            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                           'AppleWebKit/537.36 (KHTML, like Gecko) '
+                           'Chrome/123.0.0.0 Safari/537.36')
+        }
 
     def _get_base_url(self, url):
         parsed = urlparse(url)

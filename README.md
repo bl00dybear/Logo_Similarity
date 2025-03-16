@@ -32,9 +32,13 @@ logo_clustering/
 </script>
 ```
 
-```txt
+```text
 1163/4384
 Error at https://bakertilly.ci: cannot identify image file <_io.BytesIO object at 0x753b3039a430>
 Why?
 PIL.Image.open(BytesIO(img_response.content))   --> doesn t work for svg
+```
+
+```text
+2631/4384
 ```
