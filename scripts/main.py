@@ -2,6 +2,8 @@ import numpy as np
 
 from logo_extractor import LogoExtractor
 from feature_extractor import FeatureExtractor
+from clustering import LogoClustering
+from cluster_visualization import plot_cluster_distribution
 from utils import *
 
 if __name__ == "__main__":
@@ -44,3 +46,8 @@ if __name__ == "__main__":
 
     embeddings = np.load("../embeddings.npy")
     # print(embeddings.shape)
+
+    clusterer = LogoClustering(eps=0.5,min_samples=5)
+    labels = clusterer.perform_clustering(embeddings)
+
+    plot_cluster_distribution(embeddings, labels)
