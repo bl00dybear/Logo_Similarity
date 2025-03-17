@@ -6,7 +6,7 @@
 | Section         | Description |
 |----------------|------------|
 | [Introduction](#introduction) | Overview of the project |
-| [Project Stucture](#ProjectStructure) | Key functionalities and highlights |
+| [Project Stucture](#project_structure) | Key functionalities and highlights |
 | [Installation](#installation) | How to install and set up the project |
 
 
@@ -16,6 +16,8 @@
 ## Step 1: Reasearch
 
 In the begining I had to identify 
+# CEVA
+# CEVA
 ## Project structure
 
 ```txt
