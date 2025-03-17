@@ -3,11 +3,11 @@
 
 ## Table of Contents
 
-| Section         | Description |
-|----------------|------------|
-| [Introduction](#introduction) | Overview of the project |
-| [Project Stucture](#project_structure) | Key functionalities and highlights |
-| [Installation](#installation) | How to install and set up the project |
+| Section         |
+|----------------|
+| [Introduction](#introduction) |
+| [Project Stucture](#project-structure) | 
+| [Installation](#installation) | 
 
 
 
@@ -15,9 +15,7 @@
 
 ## Step 1: Reasearch
 
-In the begining I had to identify 
-# CEVA
-# CEVA
+In the begining I had to identify
 ## Project structure
 
 ```txt
