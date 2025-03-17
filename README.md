@@ -5,17 +5,21 @@
 
 | Section         |
 |----------------|
-| [Introduction](#introduction) |
+| [Reasearch](#reasearch) |
 | [Project Stucture](#project-structure) | 
-| [Installation](#installation) | 
+| [Logo extraction](#logo-extraction) | 
+| [Feature extraction](#features-extraction)|
+| [Clustering](#clustering)|
 
 
 
 
 
-## Step 1: Reasearch
+## Reasearch
 
-In the begining I had to identify
+In the begining I had to identify the general type of the task. The answer is `Image Clustering`, more precisely image clustering on an unknown number of clusters. 
+
+My first approach was to 
 ## Project structure
 
 ```txt
@@ -37,6 +41,8 @@ logo_similarity/
 
 ```
 
+## Logo extraction
+### JSON_ld
 ```html
 <script type="application/ld+json">
 {
@@ -50,13 +56,23 @@ logo_similarity/
 }
 </script>
 ```
+### Logos found with first searching algorithm : 1163/4384
 
+### Had this error:
 ```text
-1163/4384
 Error at https://bakertilly.ci: cannot identify image file <_io.BytesIO object at 0x753b3039a430>
-Why?
-PIL.Image.open(BytesIO(img_response.content))   --> doesn t work for svg
 ```
+The approach was to access this site and search for the logo. There I realized that the logo format is SVG, format unaccepted by: `PIL.Image.open(BytesIO(img_response.content))`. The solution is to download the logo as SVG and convert it to PNG (due to possibility of transparent background).
+
+
+## Features extraction
+
+## Clustering
+
+
+
+
+
 
 ```text
 2631/4384
