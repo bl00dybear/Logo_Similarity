@@ -84,7 +84,7 @@ class LogoExtractor:
         url = f"https://{domain}" if not domain.startswith(('http://', 'https://')) else domain
 
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers,timeout=25)
             soup = BeautifulSoup(response.text, "html.parser")
             base_url = self._get_base_url(url)
 
