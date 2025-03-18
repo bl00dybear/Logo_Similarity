@@ -3,7 +3,7 @@ import numpy as np
 from logo_extractor import LogoExtractor
 from feature_extractor import FeatureExtractor
 from clustering import LogoClustering
-from cluster_visualization import plot_cluster_distribution
+from cluster_visualization import *
 from utils import *
 
 if __name__ == "__main__":
@@ -50,4 +50,4 @@ if __name__ == "__main__":
     clusterer = LogoClustering(eps=0.5,min_samples=5)
     labels = clusterer.perform_clustering(embeddings)
 
-    plot_cluster_distribution(embeddings, labels)
+    plot_cluster_distribution_without_outliers(embeddings, labels)
