@@ -5,6 +5,7 @@
 
 | Section         |
 |----------------|
+| [Clone](#clone)|
 | [Reasearch](#reasearch) |
 | [Project Stucture](#project-structure) | 
 | [Logo extraction](#logo-extraction) | 
@@ -13,7 +14,29 @@
 
 
 
+## Clone
 
+### Considering that I made the project on Ubuntu, these are the steps to configure and run the project
+Clone repository:
+```bash
+git clone git@github.com:bl00dybear/IndoDB.git
+```
+Create the virtual environment:
+```bash
+python -m venv venv
+```
+Activate it on Linux:
+```bash
+source venv/bin/activate  
+```
+Activate it on Windows:
+```bash
+venv\Scripts\activate 
+```
+Install required packages:
+```bash
+pip install -r requirements.txt
+```
 
 ## Reasearch
 
