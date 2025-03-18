@@ -19,7 +19,7 @@
 ### Considering that I made the project on Ubuntu, these are the steps to configure and run the project
 Clone repository:
 ```bash
-git clone git@github.com:bl00dybear/IndoDB.git
+git clone git@github.com:bl00dybear/Logo_Similarity.git
 ```
 Create the virtual environment:
 ```bash
