@@ -42,7 +42,16 @@ pip install -r requirements.txt
 
 In the begining I had to identify the general type of the task. The answer is `Image Clustering`, more precisely image clustering on an unknown number of clusters. 
 
-My first approach was to 
+After an initial research, I found the Feature-based Matching method, which is a technique that identifies key points in images and matches them based on their distinctive features. However, the issue with this approach was the execution time, which was very high, making it unsuitable for larger datasets.
+
+So, I didn’t stop at this idea and found a more robust approach: clustering based on CNN embeddings. Specifically, I used embeddings from the penultimate layer of the CNN, which captures high-level feature representations of the input data before the final classification layer. This layer encodes abstract patterns and semantic information, making it suitable for clustering similar instances more effectively.
+
+Now comes the question of how to implement the CNN. Do I have a large enough dataset for a CNN? Considering that I don't have this dataset, what should I do?
+
+The answer to all these questions is the use of a pre-trained CNN model, specifically ResNet50. I chose this model because
+
+Is **ResNet50** scalable?<br>
+ResNet50 is scalable because its deep architecture with residual connections handles large datasets well, it can be optimized with transfer learning to reduce computational requirements, and it leverages GPU resources efficiently for faster training on extensive data.
 ## Project structure
 
 ```txt
@@ -109,6 +118,8 @@ The approach was to access this site and search for the logo. There I realized t
 
 ## Features extraction
 
+### Adaptive background 
+
 ## Clustering
 
 
@@ -116,10 +127,3 @@ The approach was to access this site and search for the logo. There I realized t
 
 
 
-```text
-2631/4384
-```
-
-```text
-adaptive background in feature extractor
-```
