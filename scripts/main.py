@@ -47,7 +47,15 @@ if __name__ == "__main__":
     embeddings = np.load("../embeddings.npy")
     # print(embeddings.shape)
 
-    clusterer = LogoClustering(eps=0.5,min_samples=5)
+    clusterer = LogoClustering(min_samples=3)
     labels = clusterer.perform_clustering(embeddings)
 
-    plot_cluster_distribution_without_outliers(embeddings, labels)
+    print(labels)
+
+    # plot_cluster_distribution_without_outliers(embeddings, labels)
+    plot_cluster_distribution(embeddings, labels)
+
+# tsme visualization w/o outliers 1 --> min samples 5
+# tsme visualization w/o outliers 2 --> min samples 4
+# tsme visualization w/o outliers 3 --> min samples 3
+# tsme visualization w/o outliers 1 --> min samples 2
