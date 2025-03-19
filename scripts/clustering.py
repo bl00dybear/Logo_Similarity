@@ -7,6 +7,6 @@ class LogoClustering:
     def perform_clustering(self, embeddings):
         # cosine distance bud embeddings requires normalization (<1)
         # in euclidean dist normalization is not required
-        clusterer = hdbscan.HDBSCAN(metric="euclidean", min_cluster_size=self.min_samples)
+        clusterer = hdbscan.HDBSCAN(metric="euclidean", min_cluster_size=self.min_samples, min_samples=2)
         labels = clusterer.fit_predict(embeddings)
         return labels
