@@ -107,7 +107,7 @@ class LogoExtractor:
             alt_text = img.get('alt', '').lower()
             title_text = img.get('title', '').lower()
 
-            if ('logo' in alt_text or 'logo' in title_text):
+            if 'logo' in alt_text or 'logo' in title_text:
                 logo_url = normalize_url(img)
                 if logo_url:
                     return logo_url
