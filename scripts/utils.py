@@ -13,8 +13,9 @@ def write_dict_in_csv_file(logo_dict,dict_path="../logo_dict.csv"):
 
 def read_dict_from_csv(dict_path="../logo_dict.csv"):
     with open(dict_path, mode="r", newline="", encoding="utf-8") as file:
-        reader = csv.reader(file)
-        next(reader)
-        logo_dict = {rows[0]:rows[1] for rows in reader}
+        rows = csv.reader(file)
+        next(rows)
+        logo_dict = {row[0]:[row[1],row[2]] for row in rows}
+        # print(logo_dict)
 
     return logo_dict
