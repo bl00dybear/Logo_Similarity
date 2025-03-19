@@ -254,11 +254,21 @@ class LogoExtractor:
         print(f"No logo found for {domain}\n")
         return None
 
-    def extract_from_csv(self, csv_file_path, domain_column="domain", thread_number=20):
+    def extract_from_csv(self, csv_file_path, domain_column="domain", thread_number=30):
         with open(csv_file_path, 'r') as csv_file:
             domains = [row[domain_column] for row in csv.DictReader(csv_file)]
 
-        # print(domains)
+        # print(len(domains))
+
+        domain_with_distribution = {}
+
+        for domain in domains:
+            if domain not in domain_with_distribution:
+                domain_with_distribution[domain] = 1
+            else:
+                domain_with_distribution[domain] += 1
+
+        # print(len(domain_with_distribution))
 
         results = {}
 
@@ -270,7 +280,8 @@ class LogoExtractor:
 
                 for future in as_completed(futures):
                     domain = futures[future]
-                    results[domain] = future.result()
+                    if domain not in results:
+                        results[domain] = [future.result(), domain_with_distribution[domain]]
                     processed += 1
                     progress_bar.set_description(f"Processed {processed}/{len(futures)} sites")
                     progress_bar.update(1)
