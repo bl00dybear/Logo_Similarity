@@ -146,14 +146,13 @@ The only issue I encountered was with logos that have a transparent background, 
 
 
 ## Clustering
-
-As the first form of verification for the entire program, I plotted the clusters in a `t-SNE` diagram (since the embedding size is 2048 dimensions), obtaining something where the clusters weren't very distinct due to outliers:
+The first version of the clustering code was a simple one where we just called `HDBSCAN` and processed the input and output parameters. As the form of verification for the entire program, I plotted the clusters in a `t-SNE` diagram (since the embedding size is 2048 dimensions), obtaining something where the clusters weren't very distinct due to outliers:
 
 ![](/results/tsne_visualization.png)
-So I also plotted it without the outliers:
+**So I also plotted it without the outliers:**
 ![](/results/tsne_visualization_without_outliers.png)
 [Back at Table of Contents](#table-of-contents)
 
-
+After seeing that fairly good clusters were formed visually (there are clear separations and no color intersections), I also generated the program's output, which is located in `~/datasets/label_domain_dict.json`. It contains a dictionary with the cluster ID as the key (with `-1` being the ID for outliers) and the corresponding domains for the cluster as the value in an array.
 
 
