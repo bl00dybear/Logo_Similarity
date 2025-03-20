@@ -35,6 +35,9 @@ class FeatureExtractor:
             if img.mode == "P" or img.mode == "LA":                                         # P = palette and LA = grayscale with alpha channel
                 img = img.convert("RGBA")
 
+            # most logos have transparent background so i added an adaptive background based
+            # on the brightness of the image (this approach is solid in cases where logo is the
+            # same but colors are a bit different
             if img.mode == "RGBA":
                 adaptive_bg = self.get_adaptive_background(img.convert("RGB"))
                 background = Image.new("RGB", img.size, adaptive_bg)
