@@ -2,12 +2,13 @@ import numpy as np
 
 from logo_extractor import LogoExtractor
 from feature_extractor import FeatureExtractor
-from clustering import LogoClustering
+from clustering_advanced import LogoClustering
 from cluster_visualization import *
 from utils import *
 
 if __name__ == "__main__":
 
+    # Extract logo
     response = input("Do you want to search for logos? [y/n] ")
 
     while response not in ["y", "n"]:
@@ -24,6 +25,7 @@ if __name__ == "__main__":
         write_dict_in_csv_file(logo_dict)
 
 
+    # Extract features
     response = input("Do you want to extract features? If you updated logo dataset, feature extraction is required! [y/n] ")
 
     while response not in ["y", "n"]:
@@ -45,13 +47,14 @@ if __name__ == "__main__":
         for domain,values in logo_dict.items():
             if values[0]:
                 features = feature_extractor.extract_features(values[0])
+                # features represents a 2048d np array
                 extracted_features_num += 1
-                print(f"Features extracted for {extracted_features_num}/{len(logo_dict)} domains")
+                print(f"Features extracted for {extracted_features_num} domains.")
                 if features is not None:
                     for i in range(int(values[1])):
                         embeddings.append(features)
                     valid_domains.append(domain)
-
+        # embeddings has shape (num_of_valid_domains_multiplied_with_aparitions,2048)
         embeddings = np.vstack(embeddings)
         print("Embeddings shape: ", embeddings.shape)
         np.save("../datasets/embeddings.npy", embeddings)
@@ -60,17 +63,44 @@ if __name__ == "__main__":
 
     embeddings = np.load("../datasets/embeddings.npy")
 
-    clusterer = LogoClustering(min_clusters=2, min_samples=2)
-    labels = clusterer.perform_clustering(embeddings)
 
-    # print(len(labels))
+    response = input("Do you want to recalculate again parameters? [y/n]: ")
 
-    # plot_cluster_distribution_without_outliers(embeddings, labels)
+    while response not in ["y", "n"]:
+        print("Invalid input. Please enter 'y' for yes or 'n' for no.")
+        response = input("Do you want to recalculate again parameters? [y/n]: ")
+
+
+    # Calibration of hdbscan parameters if it is strictly necessary
+    filename = "../datasets/best_parameters.json"
+    if response == "y":
+        clusterer = LogoClustering()
+        optimal_results = clusterer.find_optimal_parameters(embeddings)
+        print(f"Optimal parameters are: min_clusters={optimal_results['best_params']['min_clusters']}, min_samples={optimal_results['best_params']['min_samples']}")
+
+        optimal_results_converted = convert_numpy_to_python(optimal_results)
+        with open(filename, 'w') as f:
+            json.dump(optimal_results_converted, f, indent=4)
+
+        labels = clusterer.perform_clustering(embeddings)
+        print("Optimal parameters recalculated and saved to file ../datasets/best_parameters.json.")
+    else:
+        with open(filename, 'r') as f:
+            best_params = json.load(f)
+
+        min_clusters = best_params['best_params']['min_clusters']
+        min_samples = best_params['best_params']['min_samples']
+        metric = best_params['best_params']['metric']
+        epsilon = best_params['best_params']['epsilon']
+        method = best_params['best_params']['method']
+
+        clusterer = LogoClustering(min_clusters=min_clusters,min_samples=min_samples,metric=metric,cluster_selection_epsilon=epsilon,cluster_selection_method=method)
+        labels = clusterer.perform_clustering(embeddings)
+        print("Loaded optimal parameters from file ../datasets/best_parameters.json.")
+
+
+    # Plotting and generating output file
     plot_cluster_distribution_without_outliers(embeddings, labels)
-    # tsme visualization w/o outliers 1 --> min samples 5
-    # tsme visualization w/o outliers 2 --> min samples 4
-    # tsme visualization w/o outliers 3 --> min samples 3
-    # tsme visualization w/o outliers 4 --> min samples 2
 
     if len(valid_domains):
         if not logo_dict:
