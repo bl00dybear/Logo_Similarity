@@ -2,7 +2,7 @@ import csv
 import json
 
 
-def write_dict_in_csv_file(logo_dict,dict_path="../logo_dict.csv"):
+def write_dict_in_csv_file(logo_dict,dict_path="../datasets/logo_dict.csv"):
     with open(dict_path, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(["domain", "path", "distribution"])
@@ -12,7 +12,7 @@ def write_dict_in_csv_file(logo_dict,dict_path="../logo_dict.csv"):
                 temp.append(value)
             writer.writerow(temp)
 
-def read_dict_from_csv(dict_path="../logo_dict.csv"):
+def read_dict_from_csv(dict_path="../datasets/logo_dict.csv"):
     with open(dict_path, mode="r", newline="", encoding="utf-8") as file:
         rows = csv.reader(file)
         next(rows)
@@ -36,7 +36,7 @@ def construct_label_domain_dict(labels, logo_dict, valid_domains):
 
     return label_domain_dict
 
-def save_label_domain_dict(label_domain_dict, filename="../label_domain_dict.json"):
+def save_label_domain_dict(label_domain_dict, filename="../datasets/label_domain_dict.json"):
     label_domain_dict_converted={int(k):v for k,v in label_domain_dict.items()}
 
     label_domain_dict_converted = {k: label_domain_dict_converted[k] for k in sorted(label_domain_dict_converted)}

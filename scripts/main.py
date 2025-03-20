@@ -20,7 +20,7 @@ if __name__ == "__main__":
         # what dose extract_from_csv: method that takes each domain from dataset and searches for logos
             # if the logo is found, it is downloaded in '../logos/' directory
         # returns: a dictionary that has domain as key and as value the path of the logo
-        logo_dict = logo_extractor.extract_from_csv(csv_file_path="../dataset.csv",domain_column="domain")
+        logo_dict = logo_extractor.extract_from_csv(csv_file_path="../datasets/dataset.csv", domain_column="domain")
         write_dict_in_csv_file(logo_dict)
 
 
@@ -54,11 +54,11 @@ if __name__ == "__main__":
 
         embeddings = np.vstack(embeddings)
         print("Embeddings shape: ", embeddings.shape)
-        np.save("../embeddings.npy", embeddings)
-        save_strings_to_csv(valid_domains,"../valid_domains.csv")
-        print("Embeddings saved in ../embeddings.npy")
+        np.save("../datasets/embeddings.npy", embeddings)
+        save_strings_to_csv(valid_domains,"../datasets/valid_domains.csv")
+        print("Embeddings saved in ../datasets/embeddings.npy")
 
-    embeddings = np.load("../embeddings.npy")
+    embeddings = np.load("../datasets/embeddings.npy")
 
     clusterer = LogoClustering(min_clusters=2, min_samples=2)
     labels = clusterer.perform_clustering(embeddings)
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     else:
         if not logo_dict:
             logo_dict = read_dict_from_csv()
-        valid_domains = load_strings_from_csv("../valid_domains.csv")
+        valid_domains = load_strings_from_csv("../datasets/valid_domains.csv")
         label_domain_dict = construct_label_domain_dict(labels, logo_dict, valid_domains)
 
     save_label_domain_dict(label_domain_dict)
