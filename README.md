@@ -134,10 +134,16 @@ There were also websites that were unreachable even from the browser, for which 
 [Back at Table of Contents](#table-of-contents)
 
 ## Features extraction
+
+As I mentioned in the research section, I extract the embeddings by taking the penultimate layer before the output of the pre-trained `ResNet50` model. This approach is robust because the penultimate layer captures high-level features and abstract representations, which are less specific to the model's final decision, making them more generalizable for clustering.
+### Adaptive background 
+The only issue I encountered was with logos that have a transparent background, as I need to apply a background to them. To avoid adding a background that would influence the features too much, potentially favoring or disadvantaging a logo in the clustering decision, I considered that the most neutral approach would be to add a light background when the image's brightness is high, and a dark one otherwise.
+
 [Back at Table of Contents](#table-of-contents)
 
-### Adaptive background 
-[Back at Table of Contents](#table-of-contents)
+
+
+
 
 ## Clustering
 
@@ -146,6 +152,7 @@ As the first form of verification for the entire program, I plotted the clusters
 ![](/results/tsne_visualization.png)
 So I also plotted it without the outliers:
 ![](/results/tsne_visualization_without_outliers.png)
+[Back at Table of Contents](#table-of-contents)
 
 
 
