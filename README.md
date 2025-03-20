@@ -53,6 +53,11 @@ The answer to all these questions is the use of a `pre-trained CNN model`, speci
 Is `ResNet50` scalable?<br>
 `ResNet50` is scalable because its deep architecture with residual connections handles large datasets well, it can be optimized with transfer learning to reduce computational requirements, and it leverages GPU resources efficiently for faster training on extensive data.
 
+How do I do clustering with these embeddings?<br>
+After extracting the embeddings, I should performed clustering using `HDBSCAN` (better than `DBSCAN` because it handles varying densities better). At the same time, it is quite suitable for logos because it effectively separates outliers, focusing more on forming correct clusters rather than forcing a logo into a specific cluster. Additionally, I couldn't use `K-Means` due to the unknown number of clusters.
+
+After forming this overview of how I should code this project, I got to work. The following are 3 sections, covering the three main parts of the project, where I will present more technically how I coded them and some of the issues I encountered.
+
 [Back at Table of Contents](#table-of-contents)
 
 
@@ -67,13 +72,17 @@ logo_similarity/
     │    │── clustering.py              # hdbscan model used for clustering    
     │    │── cluster_visualization.py   # tsne visualization                
     │    │── utils.py                   # auxiliar functions used in main.py
-    │──dataset.csv                      
-    │──embeddings.npy
-    │──logo_dict.csv
-    │──logos.snappy.parquet
-    │──snappy_parquet_to_csv.py
+    │──datasets/
+    │    │── dataset.csv
+    │    │── embedddings.npy
+    │    │── label_domain_disct.json
+    │    │── logo_dict.cvs   
+    │    │── logos.snappy.parquet
+    │    │── snappy_parquet_to_csv.py
+    │    │── valid_domains.csv                    
     │──logos/
     │──results/
+    |──requirements.txt
 
 ```
 [Back at Table of Contents](#table-of-contents)
@@ -118,7 +127,9 @@ Error at https://bakertilly.ci: cannot identify image file <_io.BytesIO object a
 The approach was to access this site and search for the logo. There I realized that the logo format is SVG, format unaccepted by: `PIL.Image.open(BytesIO(img_response.content))`. The solution is to download the logo as SVG and convert it to PNG (due to possibility of transparent background). Later I realized that logos can also be GIFs, where I did exactly the same thing.
 
 ### Sites accessible only from real browsers
+Another problem I encountered, which I couldn't solve, was that some websites couldn't be accessed by my code (but they worked in the browser). I even tried writing code that would mimic a real browser as much as possible. Since it didn't work at all, I assumed that those websites had firewalls and protections that I don't know how to bypass.
 
+There were also websites that were unreachable even from the browser, for which I would most likely have needed a VPN.
 
 [Back at Table of Contents](#table-of-contents)
 
@@ -130,7 +141,11 @@ The approach was to access this site and search for the logo. There I realized t
 
 ## Clustering
 
+As the first form of verification for the entire program, I plotted the clusters in a `t-SNE` diagram (since the embedding size is 2048 dimensions), obtaining something where the clusters weren't very distinct due to outliers:
 
+![](/results/tsne_visualization.png)
+So I also plotted it without the outliers:
+![](/results/tsne_visualization_without_outliers.png)
 
 
 
