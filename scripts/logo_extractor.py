@@ -161,6 +161,19 @@ class LogoExtractor:
 
         return None
 
+    def _save_and_convert_svg_to_png(self, svg_data, domain):
+        logo_svg_path = os.path.join(self.output_dir, f"{domain}.svg")
+        logo_png_path = os.path.join(self.output_dir, f"{domain}.png")
+
+        with open(logo_svg_path, "w", encoding="utf-8") as f:
+            f.write(svg_data)
+
+        cairosvg.svg2png(url=logo_svg_path, write_to=logo_png_path)
+        os.remove(logo_svg_path)
+
+        print(f"Converted SVG to PNG for {domain}")
+        return logo_png_path
+
     def extract_logo(self, domain):
         url = f"https://{domain}" if not domain.startswith(('http://', 'https://')) else domain
 
@@ -179,7 +192,7 @@ class LogoExtractor:
                 logo_url = urljoin(base_url, logo_candidates[0]['src']) if logo_candidates else None
 
 
-            # svg logo fix
+            # here we deal with the case where the logo is a gif, converting it and saving it as a png
             if logo_url.startswith("data:image/gif"):
                 try:
                     print(f"Converting base64 GIF to PNG for {domain}...")
@@ -197,48 +210,30 @@ class LogoExtractor:
                     print(f"Error processing GIF for {domain}: {e}")
                     return None
 
-            if logo_url.startswith("data:image/svg+xml"):
-                svg_data = logo_url.split(",", 1)[1]
-                svg_data = requests.utils.unquote(svg_data)
-
-                logo_svg_path = os.path.join(self.output_dir, f"{domain}.svg")
-                logo_png_path = os.path.join(self.output_dir, f"{domain}.png")
-
-                with open(logo_svg_path, "w", encoding="utf-8") as f:
-                    f.write(svg_data)
-
-                # Convert SVG → PNG
-                cairosvg.svg2png(url=logo_svg_path, write_to=logo_png_path)
-                os.remove(logo_svg_path)
-
-                print(f"Converted inline SVG to PNG for {domain}")
-                return logo_png_path
-
+            # case where the logo is a gif, converting it and saving it as a png
             try:
+                if logo_url.startswith("data:image/svg+xml"):
+                    # if logo is inline format SVG (base64 encoded)
+                    svg_data = logo_url.split(",", 1)[1]
+                    svg_data = requests.utils.unquote(svg_data)
+                    return self._save_and_convert_svg_to_png(svg_data, domain)
+
                 head_response = requests.head(logo_url, headers=self.headers, timeout=5)
                 content_type = head_response.headers.get("Content-Type", "")
 
                 if "image/svg+xml" in content_type:
                     svg_response = requests.get(logo_url, headers=self.headers, timeout=10)
                     if svg_response.status_code == 200:
-                        logo_svg_path = os.path.join(self.output_dir, f"{domain}.svg")
-                        logo_png_path = os.path.join(self.output_dir, f"{domain}.png")
-
-                        with open(logo_svg_path, "wb") as f:
-                            f.write(svg_response.content)
-
-                        # convert SVG → PNG
-                        cairosvg.svg2png(url=logo_svg_path, write_to=logo_png_path)
-                        os.remove(logo_svg_path)
-                        print(f"Converted SVG to PNG for {domain}")
-                        return logo_png_path
+                        return self._save_and_convert_svg_to_png(svg_response.content.decode('utf-8'), domain)
                     else:
                         print(f"Failed to download SVG for {domain}")
                         return None
+
             except Exception as e:
                 print(f"Error handling external SVG for {domain}: {e}")
+                return None
 
-
+            # case where logo is a png or jpeg
             try:
                 img_response = requests.get(logo_url, headers=self.headers, timeout=10)
                 if img_response.status_code == 200:
@@ -258,21 +253,22 @@ class LogoExtractor:
         with open(csv_file_path, 'r') as csv_file:
             domains = [row[domain_column] for row in csv.DictReader(csv_file)]
 
-        # print(len(domains))
 
         domain_with_distribution = {}
 
+        # there are domains that are appears multiple times, so we save the number of appears in an array
         for domain in domains:
             if domain not in domain_with_distribution:
                 domain_with_distribution[domain] = 1
             else:
                 domain_with_distribution[domain] += 1
 
-        # print(len(domain_with_distribution))
 
         results = {}
 
         with ThreadPoolExecutor(max_workers=thread_number) as executor:
+            # for each domain in the domains list, a thread will be launched that will call the extract_logo
+            # function and return a Future. The associated dictionary will link each Future to the respective domain.
             futures = {executor.submit(self.extract_logo, domain): domain for domain in domains}
 
             with tqdm(total=len(futures), desc="Processing sites") as progress_bar:

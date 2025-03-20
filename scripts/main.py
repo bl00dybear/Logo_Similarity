@@ -17,6 +17,9 @@ if __name__ == "__main__":
     logo_dict = {}
     if response == "y":
         logo_extractor = LogoExtractor(output_dir="../logos")
+        # what dose extract_from_csv: method that takes each domain from dataset and searches for logos
+            # if the logo is found, it is downloaded in '../logos/' directory
+        # returns: a dictionary that has domain as key and as value the path of the logo
         logo_dict = logo_extractor.extract_from_csv(csv_file_path="../dataset.csv",domain_column="domain")
         write_dict_in_csv_file(logo_dict)
 
@@ -57,7 +60,7 @@ if __name__ == "__main__":
 
     embeddings = np.load("../embeddings.npy")
 
-    clusterer = LogoClustering(min_samples=3)
+    clusterer = LogoClustering(min_clusters=2, min_samples=2)
     labels = clusterer.perform_clustering(embeddings)
 
     # print(len(labels))
