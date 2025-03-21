@@ -178,4 +178,5 @@ There is a bug that I am aware of but haven't had the chance to fix. If the extr
 The first improvement I could have made would have been to add the favicon as a backup for logo extraction (I hesitated to do this because the poor quality of the favicon and the possible difference in the logo might have confused me during development, as the clusters could have formed completely differently).
 
 Another improvement would have been to explore the CNN model parameters further, even though I believe the improvement wouldn't have been substantial.
+
 [Back at Table of Contents](#table-of-contents)
