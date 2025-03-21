@@ -3,15 +3,17 @@
 
 ## Table of Contents
 
-| Section         |
-|----------------|
-| [Clone](#clone)|
-| [Reasearch](#reasearch) |
-| [Project Stucture](#project-structure) | 
-| [Logo extraction](#logo-extraction) | 
-| [Feature extraction](#features-extraction)|
-| [Clustering](#clustering)|
-
+| Section                                                        |
+|----------------------------------------------------------------|
+| [Clone](#clone)                                                |
+| [Reasearch](#reasearch)                                        |
+| [Project Stucture](#project-structure)                         | 
+| [Logo extraction](#logo-extraction)                            | 
+| [Feature extraction](#features-extraction)                     |
+| [Clustering](#clustering)                                      |
+| [How to use CLI](#how-to-use-cli)                              |
+| [Bug](#bug)                                                    |
+| [How could I have improved it?](#how-could-i-have-improved-it) |
 
 
 ## Clone
@@ -73,16 +75,17 @@ logo_similarity/
     │    │── cluster_visualization.py   # tsne visualization                
     │    │── utils.py                   # auxiliar functions used in main.py
     │──datasets/
-    │    │── dataset.csv
-    │    │── embedddings.npy
-    │    │── label_domain_disct.json
-    │    │── logo_dict.cvs   
-    │    │── logos.snappy.parquet
-    │    │── snappy_parquet_to_csv.py
-    │    │── valid_domains.csv                    
-    │──logos/
-    │──results/
-    |──requirements.txt
+    │    │── dataset.csv               # initial list of doamins
+    │    │── embedddings.npy           # data after feature extraction 
+    │    │── label_domain_disct.json   # final output of the program
+    │    │── logo_dict.cvs             # contains domain, path to downloaded logo, and num of appears of the domain in dataset
+    │    │── logos.snappy.parquet      
+    │    │── snappy_parquet_to_csv.py  # converter to be abel to read the dataset I received
+    │    │── valid_domains.csv         # an array with domains name whose logo was found
+    │    │── best_parameters.json      # best params for hdbscan and metrics for clustering algorithm
+    │──logos/                          # directory with logos downloaded
+    │──results/                        # directory with numerous plots made during development
+    |──requirements.txt                # file used to configure venv on any device with same packages I used
 
 ```
 [Back at Table of Contents](#table-of-contents)
@@ -131,17 +134,12 @@ The only issue I encountered was with logos that have a transparent background, 
 
 [Back at Table of Contents](#table-of-contents)
 
-
-
-
-
 ## Clustering
 The first version of the clustering code was a simple one where we just called `HDBSCAN` and processed the input and output parameters. As the form of verification for the entire program, I plotted the clusters in a `t-SNE` diagram (since the embedding size is 2048 dimensions), obtaining something where the clusters weren't very distinct due to outliers:
 
 ![](/results/tsne_visualization.png)
 **So I also plotted it without the outliers:**
 ![](/results/tsne_visualization_without_outliers.png)
-[Back at Table of Contents](#table-of-contents)
 
 After seeing that fairly good clusters were formed visually (there are clear separations and no color intersections), I also generated the program's output, which is located in `~/datasets/label_domain_dict.json`. It contains a dictionary with the cluster ID as the key (with `-1` being the ID for outliers) and the corresponding domains for the cluster as the value in an array.
 
@@ -165,6 +163,19 @@ At the end of my output file i saw this:
 ```
 And then I thought that the parameter adjustment I made was not the most optimal. At that moment, I considered it was time for a new feature regarding clustering: `automatic parameter adjustment`. I created another method within the class, totally inefficient (brute force), whose runs lasted about an hour but provided the most optimal parameters we could give to `HDBSCAN`. A fun fact is that this brute force approach came up with the same parameters I had in mind, but at least now we have them in the `~/datasets/best_parameters.json` file, along with the metrics for the entire clustering algorithm.
 
-## How to interact with the CLI?
+[Back at Table of Contents](#table-of-contents)
+## How to use CLI?
 
 I designed the program execution to be modular, meaning there are two checkpoints between the three parts of the program where data is saved in the helper folder ~/datasets. This facilitates its further development by reducing execution time. If updates are made to a module, the program needs to be run in a cascade (i.e., if we updated the web scraping part, we need to run the entire program, but if we only updated the clustering part, we don’t need to rerun the steps before clustering). Running the parameter balancing algorithm is advisable if there are major changes in the dataset (though I consider it unnecessary even then if the domain distribution remains the same).
+
+[Back at Table of Contents](#table-of-contents)
+## Bug
+
+There is a bug that I am aware of but haven't had the chance to fix. If the extraction of a feature within the `ResNet50` model fails, there will be an index offset, and the output will be formed incorrectly, meaning the last domains of one cluster will be shifted to the next cluster.
+
+[Back at Table of Contents](#table-of-contents)
+## How could I have improved it?
+The first improvement I could have made would have been to add the favicon as a backup for logo extraction (I hesitated to do this because the poor quality of the favicon and the possible difference in the logo might have confused me during development, as the clusters could have formed completely differently).
+
+Another improvement would have been to explore the CNN model parameters further, even though I believe the improvement wouldn't have been substantial.
+[Back at Table of Contents](#table-of-contents)
