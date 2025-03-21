@@ -91,9 +91,7 @@ logo_similarity/
 
 The `LogoExtractor` class automates the process of retrieving website logos by:  
 
-1. **Fetching webpage HTML** using `requests` and parsing it with `BeautifulSoup`.  
-2. **Extracting logos** from multiple sources:  
-   - **JSON-LD metadata** as a first approach.
+I started by fetching the webpage HTML with requests and using BeautifulSoup to parse it. First, I tried to find logos in the JSON-LD metadata. If that didn’t work, I looked for <img> tags in attributes like class, id, alt, and src. This search took longer but usually worked better. I also normalized image URLs, especially if they were relative, to ensure they pointed to the correct location. The class handled different image formats, such as converting SVG files to PNG and saving Base64-encoded images, particularly for GIF logos. Once I found the logo, I downloaded and saved it in the ../logos folder. I was also able to process multiple logos at once using a CSV input and sped up the process with multithreading.
 ```html
 This is how a json_ld looks like:
 
@@ -109,16 +107,8 @@ This is how a json_ld looks like:
 }
 </script>
 ```
-   - **`<img>` tags** that may be included in `class`, `id`, `alt`, `src` tags (less efficient search but with a higher success rate).  
-3. **Normalizing URLs** to ensure valid image links (needed in cases where image link is relative).  
-4. **Handling different formats**:  
-   - **SVG files** are converted to PNG.  
-   - **Base64-encoded images** are decoded and saved (especially GIF logos).  
-5. **Downloading and saving the logo** in the `../logos` directory.  
-6. **Supporting bulk extraction** via CSV input, leveraging multithreading for efficiency.  
 
-
-### **Logos found with first searching algorithm : 1163/4384**
+### **Logos found for distinct domains with first searching algorithm : 1163/3416 (34%)**
 
 ### SVG/GIF error:
 ```text
@@ -130,6 +120,8 @@ The approach was to access this site and search for the logo. There I realized t
 Another problem I encountered, which I couldn't solve, was that some websites couldn't be accessed by my code (but they worked in the browser). I even tried writing code that would mimic a real browser as much as possible. Since it didn't work at all, I assumed that those websites had firewalls and protections that I don't know how to bypass.
 
 There were also websites that were unreachable even from the browser, for which I would most likely have needed a VPN.
+
+### **Logos found for distinct domains with second searching algorithm : 2600/3416 (76%)**
 
 [Back at Table of Contents](#table-of-contents)
 
