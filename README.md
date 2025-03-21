@@ -91,7 +91,7 @@ logo_similarity/
 
 The `LogoExtractor` class automates the process of retrieving website logos by:  
 
-I started by fetching the webpage HTML with requests and using BeautifulSoup to parse it. First, I tried to find logos in the JSON-LD metadata. If that didn’t work, I looked for <img> tags in attributes like class, id, alt, and src. This search took longer but usually worked better. I also normalized image URLs, especially if they were relative, to ensure they pointed to the correct location. The class handled different image formats, such as converting SVG files to PNG and saving Base64-encoded images, particularly for GIF logos. Once I found the logo, I downloaded and saved it in the ../logos folder. I was also able to process multiple logos at once using a CSV input and sped up the process with multithreading.
+I started by fetching the webpage HTML with requests and using `BeautifulSoup` to parse it. First, the algorithm tries to find logos in the `JSON-LD` metadata (an example below). If that didn’t work, it looks for `<img>` tags in attributes like `class`, `id`, `alt`, and `src`. This search took longer but usually worked better. I have also to normalized image URLs, especially if they were relative, to ensure they pointed to the correct location. The algorithm handles different image formats, such as converting `SVG` files to `PNG` and saving `Base64-encoded images` also as `PNG`, particularly for `GIF` logos. Once the logo is found, I downloaded and saved it in the `~/logos` folder. To speedup this process I used multithreading rendering, so that 30 threads searches for logos at the same time.
 ```html
 This is how a json_ld looks like:
 
