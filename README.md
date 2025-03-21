@@ -155,4 +155,26 @@ The first version of the clustering code was a simple one where we just called `
 
 After seeing that fairly good clusters were formed visually (there are clear separations and no color intersections), I also generated the program's output, which is located in `~/datasets/label_domain_dict.json`. It contains a dictionary with the cluster ID as the key (with `-1` being the ID for outliers) and the corresponding domains for the cluster as the value in an array.
 
+At the end of my output file i saw this:
+```json lines
+"296": [
+        "flashbay.fr",
+        "flashbay.hu"
+    ],
+"297": [
+     "flashbay.pt",
+     "flashbay.es"
+    ],
+"298": [
+     "flashbay.ca"
+    ],
+"299": [
+     "flashbay.com.my",
+     "flashbay.co.nz"
+    ]
+```
+And then I thought that the parameter adjustment I made was not the most optimal. At that moment, I considered it was time for a new feature regarding clustering: `automatic parameter adjustment`. I created another method within the class, totally inefficient (brute force), whose runs lasted about an hour but provided the most optimal parameters we could give to `HDBSCAN`. A fun fact is that this brute force approach came up with the same parameters I had in mind, but at least now we have them in the `~/datasets/best_parameters.json` file, along with the metrics for the entire clustering algorithm.
 
+## How to interact with the CLI?
+
+I designed the program execution to be modular, meaning there are two checkpoints between the three parts of the program where data is saved in the helper folder ~/datasets. This facilitates its further development by reducing execution time. If updates are made to a module, the program needs to be run in a cascade (i.e., if we updated the web scraping part, we need to run the entire program, but if we only updated the clustering part, we don’t need to rerun the steps before clustering). Running the parameter balancing algorithm is advisable if there are major changes in the dataset (though I consider it unnecessary even then if the domain distribution remains the same).
