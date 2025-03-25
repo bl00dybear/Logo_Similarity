@@ -25,7 +25,7 @@ git clone git@github.com:bl00dybear/Logo_Similarity.git
 ```
 Create the virtual environment:
 ```bash
-python -m venv venv
+python3 -m venv venv
 ```
 Activate it on Linux:
 ```bash
